@@ -2,10 +2,10 @@ package ru.vsu.cs.ivanov_k_a.model;
 
 public class Step {
     private Player player;
-    private Cell source;
-    private Cell target;
-    private Figure figure;
-    private Figure killedFigure;
+    private Cell startCell;
+    private Cell endCell;
+    private Figure piece;
+    private Figure killedPiece;
 
     public Player getPlayer() {
         return player;
@@ -15,35 +15,35 @@ public class Step {
         this.player = player;
     }
 
-    public Cell getSource() {
-        return source;
+    public Cell getStartCell() {
+        return startCell;
     }
 
-    public void setSource(Cell source) {
-        this.source = source;
+    public void setStartCell(Cell startCell) {
+        this.startCell = startCell;
     }
 
-    public Cell getTarget() {
-        return target;
+    public Cell getEndCell() {
+        return endCell;
     }
 
-    public void setTarget(Cell target) {
-        this.target = target;
+    public void setEndCell(Cell endCell) {
+        this.endCell = endCell;
     }
 
-    public Figure getFigure() {
-        return figure;
+    public Figure getPiece() {
+        return piece;
     }
 
-    public void setFigure(Figure figure) {
-        this.figure = figure;
+    public void setPiece(Figure piece) {
+        this.piece = piece;
     }
 
-    public Figure getKilledFigure() {
-        return killedFigure;
+    public Figure getKilledPiece() {
+        return killedPiece;
     }
 
-    public void setKilledFigure(Figure killedFigure) {
-        this.killedFigure = killedFigure;
+    public void setKilledPiece(Figure killedPiece) {
+        this.killedPiece = killedPiece;
     }
 }
