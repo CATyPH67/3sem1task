@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GameService {
-//    private Map<FigureType, IFigureService> figureServiceMap = new HashMap<>();
+    private Map<PieceType, IPieceService> pieceServiceMap;
 
-//    public GameService(Map<FigureType, IFigureService> figureServiceMap) {
-//        this.figureServiceMap = figureServiceMap;
-//    }
+    public GameService(Map<PieceType, IPieceService> pieceServiceMap) {
+        this.pieceServiceMap = pieceServiceMap;
+    }
 
     public Game createGame() {
         Map<String, Cell> number2CellMap = new LinkedHashMap<>();
@@ -20,17 +20,19 @@ public class GameService {
 
         Map<Player, Set<Piece>> player2PieceMap = new LinkedHashMap<>();
         Map<Piece, Player> piece2PlayerMap = new LinkedHashMap<>();
-        Player[] players = {new Player("whitePlayer"), new Player("bluePlayer"),
-                            new Player("GreenPlayer"), new Player("BlackPlayer")};
+        List<Player> listPlayers = Arrays.asList(new Player("whitePlayer"), new Player("bluePlayer"),
+                            new Player("GreenPlayer"), new Player("BlackPlayer"));
         PieceColor[] pieceColors = PieceColor.values();
         for (int i = 0; i < 4; i++) {
-            setPlayerPieces(players[i], pieceColors[i], player2PieceMap, piece2PlayerMap);
+            setPlayerPieces(listPlayers.get(i), pieceColors[i], player2PieceMap, piece2PlayerMap);
         }
-
         Map<Piece, Cell> piece2CellMap = new LinkedHashMap<>();
         Map<Cell, Piece> cell2PieceMap = new LinkedHashMap<>();
-        setPieceCell(player2PieceMap, piece2CellMap, cell2PieceMap, number2CellMap, players);
-        return new Game(piece2CellMap, cell2PieceMap, player2PieceMap, piece2PlayerMap, number2CellMap, cell2NumberMap);
+        setPieceCell(player2PieceMap, piece2CellMap, cell2PieceMap, number2CellMap, listPlayers);
+        Queue<Player> players = new LinkedList<>(listPlayers);
+        return new Game(piece2CellMap, cell2PieceMap,
+                player2PieceMap, piece2PlayerMap,
+                number2CellMap, cell2NumberMap, players);
     }
 
     private void createBoard(Map<String, Cell> number2CellMap, Map<Cell, String> cell2NumberMap) {
@@ -204,14 +206,14 @@ public class GameService {
                               Map<Piece, Cell> piece2CellMap,
                               Map<Cell, Piece> cell2PieceMap,
                               Map<String, Cell> number2CellMap,
-                              Player[] players) {
-        arrangeHorizontalPiece(player2PieceMap.get(players[0]), 'l', 13,
+                              List<Player> players) {
+        arrangeHorizontalPiece(player2PieceMap.get(players.get(0)), 'l', 13,
                                 piece2CellMap, cell2PieceMap, number2CellMap, -1);
-        arrangeVerticalPiece(player2PieceMap.get(players[1]), 'm', 5,
+        arrangeVerticalPiece(player2PieceMap.get(players.get(1)), 'm', 5,
                                 piece2CellMap, cell2PieceMap, number2CellMap, 1);
-        arrangeHorizontalPiece(player2PieceMap.get(players[2]), 'e', 4,
+        arrangeHorizontalPiece(player2PieceMap.get(players.get(2)), 'e', 4,
                                 piece2CellMap, cell2PieceMap, number2CellMap, 1);
-        arrangeVerticalPiece(player2PieceMap.get(players[3]), 'd', 12,
+        arrangeVerticalPiece(player2PieceMap.get(players.get(3)), 'd', 12,
                                 piece2CellMap, cell2PieceMap, number2CellMap, -1);
     }
 
@@ -283,9 +285,55 @@ public class GameService {
         cell2PieceMap.put(cell, piece);
     }
 
-//    public Game printGame(Game game) {
-//    }
-//
-//    public Game processGame(Game game, Step step) {
-//    }
+    public void processGame(Game game) {
+        Queue<Player> players = game.getPlayers();
+        Player player = players.poll();
+        players.add(player);
+        Set<Piece> pieces = game.getPlayer2PieceMap().get(player);
+        List<Piece> listPieces = new ArrayList<>(pieces);
+        Random random = new Random();
+        Piece piece;
+        Step step;
+        do {
+            piece = listPieces.get(random.nextInt(listPieces.size()));
+            IPieceService pieceService = pieceServiceMap.get(piece.getType());
+            step = pieceService.doStep(game, piece);
+        } while (step == null);
+        Cell endCell = step.getEndCell();
+        Cell startCell = step.getStartCell();
+
+        game.getPiece2CellMap().put(piece, endCell);
+        game.getCell2PieceMap().put(endCell, piece);
+        game.getCell2PieceMap().remove(startCell);
+        game.getSteps().add(step);
+
+        Piece killedPiece = step.getKilledPiece();
+        if (killedPiece != null) {
+            Player enemyPlayer = game.getPiece2PlayerMap().get(killedPiece);
+            game.getPlayer2PieceMap().get(enemyPlayer).remove(killedPiece);
+            game.getPiece2PlayerMap().remove(killedPiece);
+        }
+    }
+
+    public void printGame(Game game) {
+        List<Step> steps = game.getSteps();
+        Step step = steps.get(steps.size() - 1);
+        Cell startCell = step.getStartCell();
+        String numStartCell = game.getCell2NumberMap().get(startCell);
+        Cell endCell = step.getEndCell();
+        String numEndCell = game.getCell2NumberMap().get(endCell);
+        Piece piece = step.getPiece();
+        Piece killedPiece = step.getKilledPiece();
+        String killedPieceName;
+        String killedPieceColor;
+        if (killedPiece != null) {
+            killedPieceName = String.valueOf(killedPiece.getType());
+            killedPieceColor = String.valueOf(killedPiece.getColor());
+        } else {
+            killedPieceName = "";
+            killedPieceColor = "";
+        }
+        System.out.printf("%s %s %s -> %s %s %s \n", piece.getColor(), piece.getType(),
+                numStartCell, numEndCell, killedPieceName, killedPieceColor);
+    }
 }

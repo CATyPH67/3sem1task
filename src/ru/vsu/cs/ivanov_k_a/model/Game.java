@@ -10,16 +10,18 @@ public class Game {
     private Map<String, Cell> number2CellMap;
     private Map<Cell, String> cell2NumberMap;
     private List<Step> steps = new ArrayList<>();
+    private Queue<Player> players;
 
     public Game(Map<Piece, Cell> piece2CellMap, Map<Cell, Piece> cell2PieceMap,
                 Map<Player, Set<Piece>> player2PieceMap, Map<Piece, Player> piece2PlayerMap,
-                Map<String, Cell> number2CellMap, Map<Cell, String> cell2NumberMap) {
+                Map<String, Cell> number2CellMap, Map<Cell, String> cell2NumberMap, Queue<Player> players) {
         this.piece2CellMap = piece2CellMap;
         this.cell2PieceMap = cell2PieceMap;
         this.player2PieceMap = player2PieceMap;
         this.piece2PlayerMap = piece2PlayerMap;
         this.number2CellMap = number2CellMap;
         this.cell2NumberMap = cell2NumberMap;
+        this.players = players;
     }
 
     public Map<Piece, Cell> getPiece2CellMap() {
@@ -76,5 +78,13 @@ public class Game {
 
     public void setSteps(List<Step> steps) {
         this.steps = steps;
+    }
+
+    public Queue<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Queue<Player> players) {
+        this.players = players;
     }
 }
