@@ -18,7 +18,7 @@ public class Application {
         pieceServiceMap.put(PieceType.KING, new KingService());
         GameService gameService = new GameService(pieceServiceMap);
         Game game = gameService.createGame();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             gameService.processGame(game);
             gameService.printGame(game);
         }

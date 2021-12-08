@@ -61,22 +61,27 @@ public class PawnService implements IPieceService{
     private boolean isFirstStep(Game game, Piece piece) {
         Cell curCell = game.getPiece2CellMap().get(piece);
         PieceColor pieceColor = piece.getColor();
-        Direction backDirection;
+        String pieceNumber = game.getCell2NumberMap().get(curCell);
+        char pieceCh = pieceNumber.charAt(0);
+        int pieceInd = Integer.parseInt(pieceNumber.substring(1));
         if (pieceColor == PieceColor.WHITE) {
-            backDirection = Direction.NORTH;
+            if (pieceInd == 13) {
+                return true;
+            }
         } else if (pieceColor == PieceColor.BLUE) {
-            backDirection = Direction.EAST;
+            if (pieceCh == 'm') {
+                return true;
+            }
         } else if (pieceColor == PieceColor.GREEN) {
-            backDirection = Direction.SOUTH;
-        } else {
-            backDirection = Direction.WEST;
+            if (pieceInd == 4) {
+                return true;
+            }
+        } else if (pieceColor == PieceColor.BLACK) {
+            if (pieceCh == 'd') {
+                return true;
+            }
         }
-//        System.out.println(game.getCell2NumberMap().get(curCell));
-//        System.out.println(backDirection);
-//        System.out.println(piece.getColor());
-        Cell prevCell = curCell.getNeighbors().get(backDirection);
-        Cell prevPrevCell = prevCell.getNeighbors().get(backDirection);
-        return prevPrevCell == null;
+        return false;
     }
 
     @Override
