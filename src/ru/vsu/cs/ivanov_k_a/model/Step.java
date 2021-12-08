@@ -4,8 +4,16 @@ public class Step {
     private Player player;
     private Cell startCell;
     private Cell endCell;
-    private Figure piece;
-    private Figure killedPiece;
+    private Piece piece;
+    private Piece killedPiece;
+
+    public Step(Player player, Cell startCell, Cell endCell, Piece piece, Piece killedPiece) {
+        this.player = player;
+        this.startCell = startCell;
+        this.endCell = endCell;
+        this.piece = piece;
+        this.killedPiece = killedPiece;
+    }
 
     public Player getPlayer() {
         return player;
@@ -31,19 +39,19 @@ public class Step {
         this.endCell = endCell;
     }
 
-    public Figure getPiece() {
+    public Piece getPiece() {
         return piece;
     }
 
-    public void setPiece(Figure piece) {
+    public void setPiece(Piece piece) {
         this.piece = piece;
     }
 
-    public Figure getKilledPiece() {
+    public Piece getKilledPiece() {
         return killedPiece;
     }
 
-    public void setKilledPiece(Figure killedPiece) {
+    public void setKilledPiece(Piece killedPiece) {
         this.killedPiece = killedPiece;
     }
 }

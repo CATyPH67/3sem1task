@@ -1,6 +1,6 @@
 package ru.vsu.cs.ivanov_k_a.model;
 
-public enum FigureType {
+public enum PieceType {
     PAWN,
     ROOK,
     KNIGHT,
