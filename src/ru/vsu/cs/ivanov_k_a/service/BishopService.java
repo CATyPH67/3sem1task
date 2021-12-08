@@ -56,12 +56,22 @@ public class BishopService implements IPieceService{
         if(cellsAttackMovesSize > 0) {
             endCell = cellsAttackMoves.get(random.nextInt(cellsAttackMovesSize - 1));
             killedPiece = game.getCell2PieceMap().get(endCell);
+            Player enemyPlayer = game.getPiece2PlayerMap().get(killedPiece);
+            game.getPlayer2PieceMap().get(enemyPlayer).remove(killedPiece);
+            game.getPiece2PlayerMap().remove(killedPiece);
         } else if (cellsMovesSize > 0){
             endCell = cellsMoves.get(random.nextInt(cellsMovesSize - 1));
         } else {
             return null;
         }
 
-        return new Step(player, startCell, endCell, piece, killedPiece);
+        Step step = new Step(player, startCell, endCell, piece, killedPiece);
+
+        game.getPiece2CellMap().put(piece, endCell);
+        game.getCell2PieceMap().put(endCell, piece);
+        game.getCell2PieceMap().remove(startCell);
+        game.getSteps().add(step);
+
+        return step;
     }
 }
