@@ -1,7 +1,6 @@
 package ru.vsu.cs.ivanov_k_a.service;
 
-import ru.vsu.cs.ivanov_k_a.model.Game;
-import ru.vsu.cs.ivanov_k_a.model.PieceType;
+import ru.vsu.cs.ivanov_k_a.model.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +17,15 @@ public class Application {
         pieceServiceMap.put(PieceType.KING, new KingService());
         GameService gameService = new GameService(pieceServiceMap);
         Game game = gameService.createGame();
-        for (int i = 0; i < 10; i++) {
+        do {
             gameService.processGame(game);
             gameService.printGame(game);
-        }
+        } while (gameService.isGameOver(game));
+        gameService.printResult(game);
+
+//        for (int i = 0; i < 25; i++) {
+//            gameService.processGame(game);
+//            gameService.printGame(game);
+//        }
     }
 }

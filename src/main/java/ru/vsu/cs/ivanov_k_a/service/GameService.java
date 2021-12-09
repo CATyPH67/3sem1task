@@ -3,8 +3,6 @@ package ru.vsu.cs.ivanov_k_a.service;
 import ru.vsu.cs.ivanov_k_a.model.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GameService {
     private Map<PieceType, IPieceService> pieceServiceMap;
@@ -285,6 +283,24 @@ public class GameService {
         cell2PieceMap.put(cell, piece);
     }
 
+    public boolean isGameOver(Game game) {
+        List<Player> players = new LinkedList<>(game.getPlayers());
+        int countKing = 0;
+        for (Player player: players) {
+            Set<Piece> pieces = game.getPlayer2PieceMap().get(player);
+            for (Piece piece: pieces) {
+                if (piece.getType() == PieceType.KING) {
+                    countKing++;
+                }
+            }
+        }
+        if (countKing < 4) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void processGame(Game game) {
         Queue<Player> players = game.getPlayers();
         Player player = players.poll();
@@ -295,7 +311,11 @@ public class GameService {
         Piece piece;
         Step step;
         do {
-            piece = listPieces.get(random.nextInt(listPieces.size()));
+            if (listPieces.size() > 1) {
+                piece = listPieces.get(random.nextInt(listPieces.size()));
+            } else {
+                piece = listPieces.get(0);
+            }
             IPieceService pieceService = pieceServiceMap.get(piece.getType());
             step = pieceService.doStep(game, piece);
         } while (step == null);
@@ -335,5 +355,12 @@ public class GameService {
         }
         System.out.printf("%s %s %s -> %s %s %s \n", piece.getColor(), piece.getType(),
                 numStartCell, numEndCell, killedPieceName, killedPieceColor);
+    }
+
+    public void printResult(Game game) {
+        List<Step> steps = game.getSteps();
+        Step step = steps.get(steps.size() - 1);
+        String winnerPlayer = step.getPlayer().getName();
+        System.out.println("The winner is: " + winnerPlayer);
     }
 }
