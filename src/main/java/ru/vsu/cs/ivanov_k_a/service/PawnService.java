@@ -41,7 +41,7 @@ public class PawnService implements IPieceService{
                 }
             }
         }
-        int countStep = 0;
+        int countStep = 1;
         if (isFirstStep(game, piece)) {
             countStep++;
         }
