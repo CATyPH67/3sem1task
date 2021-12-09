@@ -22,10 +22,5 @@ public class Application {
             gameService.printGame(game);
         } while (gameService.isGameOver(game));
         gameService.printResult(game);
-
-//        for (int i = 0; i < 25; i++) {
-//            gameService.processGame(game);
-//            gameService.printGame(game);
-//        }
     }
 }
