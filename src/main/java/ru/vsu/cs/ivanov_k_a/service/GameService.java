@@ -287,18 +287,18 @@ public class GameService {
         List<Player> players = new LinkedList<>(game.getPlayers());
         int countKing = 0;
         for (Player player: players) {
+            boolean isKingDead = true;
             Set<Piece> pieces = game.getPlayer2PieceMap().get(player);
             for (Piece piece: pieces) {
                 if (piece.getType() == PieceType.KING) {
-                    countKing++;
+                    isKingDead = false;
                 }
             }
+            if (isKingDead) {
+                return false;
+            }
         }
-        if (countKing < 4) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
 
     public void processGame(Game game) {
